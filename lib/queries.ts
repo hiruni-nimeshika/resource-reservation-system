@@ -11,6 +11,7 @@ export type ResourceRow = {
   name: string;
   description: string | null;
   location: string | null;
+  floor: string | null;
   capacity: number | null;
   is_active: boolean;
   category_id: string;
@@ -38,7 +39,7 @@ export type ReservationRow = {
 export const listCategories = () => query<Category>("SELECT id, name, description FROM categories ORDER BY name");
 
 const RESOURCE_SELECT = `
-  SELECT r.id, r.name, r.description, r.location, r.capacity, r.is_active, r.category_id,
+  SELECT r.id, r.name, r.description, r.location, r.floor, r.capacity, r.is_active, r.category_id,
          c.name AS category_name, cur.end_time AS busy_until, cur.user_name AS busy_by, nxt.start_time AS next_start
     FROM resources r
     JOIN categories c ON c.id = r.category_id

@@ -13,6 +13,7 @@ function readResourceForm(formData: FormData) {
     name: formString(formData, "name"),
     categoryId: formString(formData, "categoryId"),
     location: formString(formData, "location"),
+    floor: formString(formData, "floor"),
     description: formString(formData, "description"),
     capacity: formString(formData, "capacity"),
   });
@@ -25,8 +26,8 @@ export async function createResourceAction(_prev: FormState, formData: FormData)
   const d = parsed.data;
   try {
     const rows = await query<{ id: string }>(
-      "INSERT INTO resources (category_id, name, description, location, capacity) VALUES ($1,$2,$3,$4,$5) RETURNING id",
-      [d.categoryId, d.name, d.description, d.location, d.capacity],
+      "INSERT INTO resources (category_id, name, description, location, floor, capacity) VALUES ($1,$2,$3,$4,$5,$6) RETURNING id",
+      [d.categoryId, d.name, d.description, d.location, d.floor, d.capacity],
     );
     revalidatePath("/", "layout");
     redirect(`/resources/${rows[0].id}`);
@@ -45,8 +46,8 @@ export async function updateResourceAction(_prev: FormState, formData: FormData)
   const d = parsed.data;
   try {
     await query(
-      `UPDATE resources SET category_id=$2, name=$3, description=$4, location=$5, capacity=$6, updated_at=now() WHERE id=$1`,
-      [id, d.categoryId, d.name, d.description, d.location, d.capacity],
+      `UPDATE resources SET category_id=$2, name=$3, description=$4, location=$5, floor=$6, capacity=$7, updated_at=now() WHERE id=$1`,
+      [id, d.categoryId, d.name, d.description, d.location, d.floor, d.capacity],
     );
   } catch (error) {
     if (pgErrorCode(error) === PG_UNIQUE_VIOLATION) return { error: "A resource with this name already exists.", values: submittedValues(formData) };

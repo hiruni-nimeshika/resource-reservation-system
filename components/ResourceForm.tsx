@@ -23,8 +23,9 @@ export function ResourceForm({ categories, resource }: { categories: Category[];
       </label>
       <div className="field-row">
         <label>Location<input name="location" defaultValue={v?.location ?? resource?.location ?? ""} maxLength={120} /></label>
-        <label>Capacity (optional)<input name="capacity" type="number" min={1} step={1} defaultValue={v?.capacity ?? resource?.capacity ?? ""} /></label>
+        <label>Floor (optional)<input name="floor" defaultValue={v?.floor ?? resource?.floor ?? ""} maxLength={50} placeholder="e.g. 3rd floor" /></label>
       </div>
+      <label>Capacity (optional)<input name="capacity" type="number" min={1} step={1} defaultValue={v?.capacity ?? resource?.capacity ?? ""} /></label>
       <label>Description<textarea name="description" defaultValue={v?.description ?? resource?.description ?? ""} maxLength={500} /></label>
       <FormMessage state={state} />
       <div><SubmitButton>{resource ? "Save changes" : "Add resource"}</SubmitButton></div>

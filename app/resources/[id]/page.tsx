@@ -38,6 +38,7 @@ export default async function ResourcePage({ params, searchParams }: Props) {
           <h1>{resource.name}</h1>
           <p>
             {resource.category_name}
+            {resource.floor ? ` · ${resource.floor}` : ""}
             {resource.location ? ` · ${resource.location}` : ""}
             {resource.capacity ? ` · up to ${resource.capacity}` : ""}
           </p>

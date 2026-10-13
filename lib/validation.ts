@@ -30,6 +30,7 @@ export const resourceSchema = z.object({
   name: text("Name", 80),
   categoryId: z.uuid("Choose a category."),
   location: optionalText(120),
+  floor: optionalText(50),
   description: optionalText(500),
   capacity: z
     .string()
