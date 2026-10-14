@@ -114,6 +114,7 @@ db/migrations/        Plain SQL schema (versioned)
 scripts/              migrate.ts and seed.ts
 tests/                rules.test.ts, reservations.db.test.ts
 docs/                 ER diagram (Mermaid) and DBML for dbdiagram.io
+                      Live diagram: https://dbdiagram.io/d/Resource-Reservation-ER-diagram-6acf9445aebfe7a21feb7255
 ```
 
 ## Key engineering decisions
@@ -134,6 +135,19 @@ docs/                 ER diagram (Mermaid) and DBML for dbdiagram.io
    with only its SHA-256 hash stored in the database.
 8. **Soft retire instead of delete** for resources, so booking history and reports stay accurate.
 9. **Plain CSS with design tokens** (no UI framework) to keep the dependency list short.
+
+## Database design
+
+The full schema lives in `db/migrations/001_init.sql`. The live, shareable ER diagram is here:
+
+**https://dbdiagram.io/d/Resource-Reservation-ER-diagram-6acf9445aebfe7a21feb7255**
+
+The diagram is generated from `docs/schema.dbml`. A Mermaid version that renders on GitHub is in `docs/er-diagram.md`.
+
+The design decision that matters most: overlapping confirmed reservations for the same resource are
+impossible. This is enforced by a PostgreSQL exclusion constraint on `(resource_id, tstzrange(start_time, end_time, '[)'))`,
+not by application code — a check-then-insert in application code has a race condition where two
+simultaneous requests can both see the slot as free.
 
 ## Assumptions
 
