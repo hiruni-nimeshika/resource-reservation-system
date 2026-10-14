@@ -36,6 +36,7 @@ erDiagram
         text name UK
         text description
         text location
+        text floor "optional, e.g. 3rd floor"
         int capacity "optional, > 0"
         boolean is_active "false = retired"
         timestamptz created_at
@@ -54,18 +55,3 @@ erDiagram
         uuid cancelled_by FK
         timestamptz created_at
     }
-```
-
-## The rule that matters most
-
-```sql
-CONSTRAINT reservations_no_overlap
-  EXCLUDE USING gist (
-    resource_id WITH =,
-    tstzrange(start_time, end_time, '[)') WITH &&
-  ) WHERE (status = 'confirmed')
-```
-
-No two *confirmed* reservations for the same resource may overlap in time. The database enforces this
-atomically, so even simultaneous requests cannot double-book. Cancelled reservations are ignored by the
-constraint, which frees the slot.
