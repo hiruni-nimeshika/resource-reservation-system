@@ -33,21 +33,21 @@ reservations and uncertainty about availability. This app provides:
 
 ## What I changed after receiving this project
 
-This project was developed with assistance from AI tools, which the assessment brief permits. I reviewed the code end to end, ran it against a real PostgreSQL, and made two focused changes myself — the 4-hour booking limit and the floor field — to confirm I understand how the layers connect. Each change is its own commit, and the test suite stays green throughout.
+This project was developed with assistance from AI tools, which the assessment brief permits. I reviewed the code end to end, ran it against a real PostgreSQL, and made two focused changes myself - the 4-hour booking limit and the floor field - to confirm I understand how the layers connect. Each change is its own commit, and the test suite stays green throughout.
 
 ### 1. Maximum booking length: 8 hours → 4 hours
 
-`lib/rules.ts` — `RULES.maxMinutes` is now `4 * 60`. The change ripples through the UI copy in `components/BookingForm.tsx` and in the Features list above. I tightened the boundary test in `tests/rules.test.ts` so it now asserts that a **5-hour** booking is rejected and an exactly **4-hour** booking is accepted — the test proves the exact limit rather than "something long is rejected".
+`lib/rules.ts` - `RULES.maxMinutes` is now `4 * 60`. The change ripples through the UI copy in `components/BookingForm.tsx` and in the Features list above. I tightened the boundary test in `tests/rules.test.ts` so it now asserts that a **5-hour** booking is rejected and an exactly **4-hour** booking is accepted - the test proves the exact limit rather than "something long is rejected".
 
 ### 2. Added a nullable `floor` field to resources
 
 A new migration `db/migrations/002_add_resource_floor.sql` adds `floor text` to `resources`. It is nullable because existing rows have no value and the field is descriptive, not a key. I traced it through the full request path:
 
-- `lib/validation.ts` — `floor: optionalText(50)` in the Zod schema
-- `app/actions/resources.ts` — read from the form and written in the `INSERT` / `UPDATE`
-- `components/ResourceForm.tsx` — the input on the admin form
-- `lib/queries.ts` — `r.floor` in `RESOURCE_SELECT` and in the `ResourceRow` type
-- `app/resources/[id]/page.tsx` — displayed in the resource metadata line
+- `lib/validation.ts` ; `floor: optionalText(50)` in the Zod schema
+- `app/actions/resources.ts` ; read from the form and written in the `INSERT` / `UPDATE`
+- `components/ResourceForm.tsx` ; the input on the admin form
+- `lib/queries.ts` ; `r.floor` in `RESOURCE_SELECT` and in the `ResourceRow` type
+- `app/resources/[id]/page.tsx`; displayed in the resource metadata line
 
 Migrations are append-only: `001_init.sql` is never edited, so the schema's evolution is visible from the commit history alone.
 
@@ -122,7 +122,7 @@ docs/                 ER diagram (Mermaid) and DBML for dbdiagram.io
    where two requests both see the slot as free. Instead, an `EXCLUDE USING gist` constraint on
    `(resource_id, time range)` makes PostgreSQL reject the second insert atomically. The app catches the error and
    explains who holds the slot. `tests/reservations.db.test.ts` fires 8 simultaneous bookings at one slot and asserts exactly one wins.
-2. **Half-open time ranges `[start, end)`**: 10:00–11:00 and 11:00–12:00 are allowed back-to-back.
+2. **Half-open time ranges `[start, end)`**: 10:00-11:00 and 11:00-12:00 are allowed back-to-back.
 3. **Timestamps are `timestamptz`; the organisation's timezone is configured** (`APP_TIMEZONE`, default `Asia/Colombo`).
    What users type ("10:00") is converted to an instant by PostgreSQL itself, so there is no hand-rolled offset maths.
 4. **Raw SQL with `pg` instead of an ORM.** The key constraint uses a PostgreSQL feature (range exclusion) that ORMs
