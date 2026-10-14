@@ -33,7 +33,7 @@ reservations and uncertainty about availability. This app provides:
 
 ## What I changed after receiving this project
 
-This project was provided as a starting point. I reviewed it, then made two focused changes to demonstrate that I understand how the layers connect. Each change is its own commit, and the test suite stays green throughout.
+This project was developed with assistance from AI tools, which the assessment brief permits. I reviewed the code end to end, ran it against a real PostgreSQL, and made two focused changes myself — the 4-hour booking limit and the floor field — to confirm I understand how the layers connect. Each change is its own commit, and the test suite stays green throughout.
 
 ### 1. Maximum booking length: 8 hours → 4 hours
 
