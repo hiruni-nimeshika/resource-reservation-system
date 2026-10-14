@@ -31,7 +31,7 @@ reservations and uncertainty about availability. This app provides:
 - Admin usage report with utilisation bars
 - Responsive layout, keyboard-visible focus, accessible form messages
 
-## What I changed after receiving this project
+## What I changed myself
 
 This project was developed with assistance from AI tools, which the assessment brief permits. I reviewed the code end to end, ran it against a real PostgreSQL, and made two focused changes myself - the 4-hour booking limit and the floor field - to confirm I understand how the layers connect. Each change is its own commit, and the test suite stays green throughout.
 
@@ -43,7 +43,7 @@ This project was developed with assistance from AI tools, which the assessment b
 
 A new migration `db/migrations/002_add_resource_floor.sql` adds `floor text` to `resources`. It is nullable because existing rows have no value and the field is descriptive, not a key. I traced it through the full request path:
 
-- `lib/validation.ts` ; `floor: optionalText(50)` in the Zod schema
+- `lib/validation.ts`  `floor; optionalText(50)` in the Zod schema
 - `app/actions/resources.ts` ; read from the form and written in the `INSERT` / `UPDATE`
 - `components/ResourceForm.tsx` ; the input on the admin form
 - `lib/queries.ts` ; `r.floor` in `RESOURCE_SELECT` and in the `ResourceRow` type
